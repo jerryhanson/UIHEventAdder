@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +39,34 @@ namespace EventAdder
 		{
 			// Trigger the manual test in ThisAddIn
 			Globals.ThisAddIn.RunManualTest();
+		}
+
+        private void btnPause_Click(object sender, RibbonControlEventArgs e)
+		{
+			// Check if it is a ToggleButton (Recommended)
+			RibbonToggleButton toggle = sender as RibbonToggleButton;
+
+			if (toggle != null)
+			{
+				if (toggle.Checked)
+				{
+					// USER CLICKED "PAUSE"
+					// Set the pause time to 30 minutes from now
+					ThisAddIn.PauseUntil = DateTime.Now.AddMinutes(30);
+
+					toggle.Label = "Resumes: " + ThisAddIn.PauseUntil.ToShortTimeString();
+					MessageBox.Show($"Forwarding is PAUSED for 30 minutes.\nIt will auto-resume at {ThisAddIn.PauseUntil.ToShortTimeString()}.", "Paused");
+				}
+				else
+				{
+					// USER CLICKED "RESUME" (Unchecked the button)
+					// Reset the timer
+					ThisAddIn.PauseUntil = DateTime.MinValue;
+
+					toggle.Label = "Pause 30m";
+					MessageBox.Show("Forwarding Resumed.", "Active");
+				}
+			}
 		}
 	}
 }
